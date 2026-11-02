@@ -1,0 +1,24 @@
+# Secrets and local state — never commit these
+.env
+.env.local
+notify.log
+
+# Generated per machine by setup (contains your absolute path)
+skill/notify/SKILL.md
+
+# Local scratch files and backups
+*.bak
+*.bak-*
+.tmp*
+.tmp-*
+
+# Tool/editor local state
+.node_modules/
+node_modules/
+.freebuff/
+.cloud-attachments/
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store
