@@ -22,16 +22,82 @@ included skill tells your AI agent when and how to call it.
 
 ---
 
-## Quick start (3 steps)
+## Install
 
-1. Clone the repo (or download the ZIP):
-   `git clone https://github.com/Narlonex/freebuff-notify.git`
-2. Double-click **`setup.cmd`**.
-3. Open the generated **`skill/notify/SKILL.md`** and paste its contents into **Freebuff → Skills** (or your client’s Skills panel).
+Pick one of the two ways. Both end with the same three steps: run `setup.cmd`,
+paste the generated `skill/notify/SKILL.md` into Skills, restart your client.
 
-That is the whole setup. The wizard configures Telegram, optionally WhatsApp,
-writes `.env`, generates the skill file with your real path and sends a test
-notification.
+### Option A — git clone (recommended: updates are one command)
+
+Requires [Git for Windows](https://git-scm.com/download/win) — `git --version`
+must work. Open **cmd** (Win+R → `cmd`) and run:
+
+```bat
+cd /d "%USERPROFILE%\Desktop"
+git clone https://github.com/Narlonex/freebuff-notify.git
+cd freebuff-notify
+setup.cmd
+```
+
+`/d` matters: it lets `cd` change the drive too. If `git` is not recognized,
+install Git for Windows or use Option B.
+
+### Option B — ZIP download (no Git needed)
+
+1. Open https://github.com/Narlonex/freebuff-notify
+2. Green **Code** button → **Download ZIP**.
+3. Right-click the downloaded file → **Extract All…** → extract to a normal
+   folder such as `C:\Users\<you>\Desktop`.
+   Do **not** run anything from inside the ZIP preview window — Windows mounts it
+   read-only and the paths break. Avoid `!` and `#` in the folder name.
+4. Open the extracted **`freebuff-notify-main`** folder and double-click
+   **`setup.cmd`**.
+
+> A ZIP is a snapshot: it does not update itself and has no `git pull`.
+> To update, download a fresh ZIP and keep your `.env` (see *Updating*).
+
+Either way the wizard asks for your bot token, writes `.env`, generates
+`skill/notify/SKILL.md` with the real path and sends a test notification.
+
+---
+
+## Updating
+
+Your credentials live in `.env`, which is never part of the repo, so no update
+asks for tokens again — as long as `.env` survives the update.
+
+### If you cloned with git
+
+```bat
+cd /d "%USERPROFILE%\Desktop\freebuff-notify"
+git pull
+setup.cmd
+```
+
+Do not run `git clean -fdx`: that deletes `.env` along with the generated skill.
+
+### If you downloaded the ZIP
+
+1. Download a fresh ZIP from GitHub and extract it next to the old folder
+   (you get a new `freebuff-notify-main`; rename it if Windows complains).
+2. Copy `.env` from the old folder into the new one — that is what keeps your
+   bot token and chat id, so you never type them again.
+3. In the new folder run `setup.cmd`. It prints
+   `Telegram is already configured (chat_id …)` → press **Enter** to keep it,
+   then **Enter** to skip WhatsApp. It regenerates the skill and sends a test.
+4. Paste the new `skill/notify/SKILL.md` into **Skills** and restart your client.
+5. Delete the old folder once the test message has arrived.
+
+**Shortcut:** instead of a second folder you can extract the new ZIP into the old
+one and choose *Replace files in destination* — `.env` is not in the archive, so
+it stays untouched.
+
+### After any update
+
+Re-paste `skill/notify/SKILL.md` and restart the client. The path inside the
+skill is tied to the folder, and older versions stored it with backslashes that
+some Skills editors silently strip — which makes the agent call a file that does
+not exist and send nothing.
 
 ---
 
@@ -219,6 +285,9 @@ Each send is logged with channel results, e.g.
 | `timeout` / `network` | no internet or API down | other channel takes over |
 | exit 0 but nothing arrived | by design: notifications are best effort | check `notify.log` |
 | agent never sends, `notify.log` stays empty | skill missing, stale, or its path got mangled | re-run `setup.cmd`, paste the fresh `SKILL.md`, restart the client |
+| `'git' is not recognized` | Git for Windows not installed | install it, or follow *Install → Option B (ZIP)* |
+| `setup.cmd` opens and closes instantly | run from inside the ZIP preview window, or Node.js missing | extract the ZIP to a real folder, install Node.js 18+ |
+| asked for the bot token again after updating | `.env` was not carried over | copy `.env` into the new folder, or paste the token once more |
 
 `notify.cmd --dry-run done` prints exactly what would be sent, including which
 channels are configured.
