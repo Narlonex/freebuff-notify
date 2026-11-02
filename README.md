@@ -27,7 +27,7 @@ included skill tells your AI agent when and how to call it.
 1. Clone the repo (or download the ZIP):
    `git clone https://github.com/Narlonex/freebuff-notify.git`
 2. Double-click **`setup.cmd`**.
-3. Add the generated **`skill/notify/SKILL.md`** to your AI client's Skills.
+3. Open the generated **`skill/notify/SKILL.md`** and paste its contents into **Freebuff → Skills** (or your client’s Skills panel).
 
 That is the whole setup. The wizard configures Telegram, optionally WhatsApp,
 writes `.env`, generates the skill file with your real path and sends a test
