@@ -164,6 +164,10 @@ of options, it sends `blocked` (not `done`), so you know it is waiting for you.
 
 If you regenerate the skill later (new folder), re-paste it — the path changed.
 
+The generated path uses forward slashes on purpose: some Skills editors strip
+backslashes, which silently breaks the command. Restart your AI client after
+adding or updating the skill so it is reloaded.
+
 ---
 
 ## Configuration (`.env`)
@@ -214,6 +218,7 @@ Each send is logged with channel results, e.g.
 | `wsp: http_401` | wrong Green API token | copy `apiToken` again |
 | `timeout` / `network` | no internet or API down | other channel takes over |
 | exit 0 but nothing arrived | by design: notifications are best effort | check `notify.log` |
+| agent never sends, `notify.log` stays empty | skill missing, stale, or its path got mangled | re-run `setup.cmd`, paste the fresh `SKILL.md`, restart the client |
 
 `notify.cmd --dry-run done` prints exactly what would be sent, including which
 channels are configured.

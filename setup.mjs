@@ -169,7 +169,9 @@ function phoneToChatId(phone) {
 function generateSkill() {
   if (!existsSync(SKILL_TEMPLATE)) return null;
   const template = readFileSync(SKILL_TEMPLATE, "utf8");
-  const content = template.split("{{NOTIFY_CMD}}").join(NOTIFY_CMD);
+  // Forward slashes only: some Skills editors strip backslashes and silently
+  // break the stored command path (the agent then calls a nonexistent file).
+  const content = template.split("{{NOTIFY_CMD}}").join(NOTIFY_CMD.replace(/\\/g, "/"));
   writeFileSync(SKILL_OUT, content, "utf8");
   return SKILL_OUT;
 }
@@ -394,6 +396,7 @@ async function main() {
     if (skillPath) {
       console.log(`OK skill generated: ${skillPath}`);
       console.log("   Add that file to your AI client's Skills so every project can use it.");
+      console.log("   Restart the client after adding it so the skill gets loaded.");
     }
 
     console.log("\nSending a real test notification...");
